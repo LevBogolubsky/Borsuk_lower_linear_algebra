@@ -445,7 +445,7 @@ def main():
         )
         print_results_for_graph_system_set(
             prime_powers,
-            [SYSTEM_G2_THROW_OUT, SYSTEM_MOD_0_FREE, SYSTEM_MOD_PLUS_1_FREE, SYSTEM_TWO_RESTRICTIONS],
+            [SYSTEM_G2_THROW_OUT, SYSTEM_MOD_0_FREE, SYSTEM_TWO_RESTRICTIONS],
             args.lowest,
             args.highest,
             args.lowest_dimension,
