@@ -40,9 +40,9 @@ def load_prime_powers(filename):
 
 def print_table(dim_from, dim_to, systems, result, good_dims, fout):
     print('\\begin{longtable}{|c|' + 'c|c|' * len(systems) + '}', file=fout)
-    print('\hline', file=fout)
-    print('размерность $\downarrow$ & ' + ' & '.join([' '] * len(systems)) + '\\\\\hline',  file=fout)
-    print('серия графов $\\rightarrow$ & ' + ' & '.join(systems) + '\\\\\hline',  file=fout) 
+    print('\\*\\nobreakhline', file=fout)
+    print('размерность $\\downarrow$ & ' + ' & '.join([' '] * len(systems)) + '\\*\\nobreakhline',  file=fout)
+    print('серия графов $\\rightarrow$ & ' + ' & '.join(systems) + '\\*\\nobreakhline',  file=fout)
 
     for dim in range(dim_from, dim_to + 1):
         results = map(lambda x : str(result[dim][x]), systems)
