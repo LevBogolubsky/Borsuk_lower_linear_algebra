@@ -202,9 +202,14 @@ def find_f_two_digits_single_ban_custom_remainder(n, prime_powers):
         size = 2 ** (n - 3)
 
     if epsilon in [0, 1]:
-        alpha_upper = binom(n - 1, q - 1)
+        alpha_upper = 0
+        for m in range(q):
+            alpha_upper += binom(n - 1, m)
     else:
-        alpha_upper = binom(n - 2, q - 1)
+        alpha_upper = 0
+        for m in range(q):
+            alpha_upper += binom(n - 2, m)
+
 
     f_estimate = int(ceil(float(size) / alpha_upper))
 
