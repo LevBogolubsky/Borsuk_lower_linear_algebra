@@ -18,6 +18,7 @@ from math import ceil
 from collections import defaultdict
 from scipy.special import binom
 from primefac import primefac
+from numpy import float128
 
 import sys 
 
@@ -27,18 +28,29 @@ DEFAULT_HIGHEST_COORDINATE_COUNT = 45
 DEFAULT_LOWEST_DIMENSION = 1
 DEFAULT_HIGHEST_DIMENSION = 1000
 
-SYSTEM_G1_THROW_OUT ='$G_1$'
-SYSTEM_G2_THROW_OUT = '$G_2$'
+SYSTEM_G1_THROW_OUT ='$H_1$'
+SYSTEM_G2_THROW_OUT = '$H_2$'
 
-SYSTEM_MOD_0_FREE = '$G_3$'
-SYSTEM_MOD_MINUS_1_FREE = '$G_4$'
-SYSTEM_MOD_PLUS_1_FREE = '$G_5$'
+SYSTEM_MOD_0_FREE = '$H_3$'
+SYSTEM_MOD_MINUS_1_FREE = '$H_4$'
+SYSTEM_MOD_PLUS_1_FREE = '$H_5$'
 
-SYSTEM_TWO_RESTRICTIONS = '$G_6$'
-SYSTEM_TWO_RESTRICTIONS_MINUS_1 = '$G_7$'
-SYSTEM_TWO_RESTRICTIONS_MINUS_2 = '$G_8$'
-SYSTEM_TWO_RESTRICTIONS_MINUS_3 = '$G_9$'
+SYSTEM_TWO_RESTRICTIONS = '$H_6$'
+SYSTEM_TWO_RESTRICTIONS_MINUS_1 = '$H_7$'
+SYSTEM_TWO_RESTRICTIONS_MINUS_2 = '$H_8$'
+SYSTEM_TWO_RESTRICTIONS_MINUS_3 = '$H_9$'
 
+SYSTEM_TO_PARAMETERS = {
+    SYSTEM_G1_THROW_OUT: '$k_{-1}, k_0, k_1$',
+    SYSTEM_G2_THROW_OUT: '$n, p^\\alpha$',
+    SYSTEM_MOD_0_FREE: '$n$',
+    SYSTEM_MOD_MINUS_1_FREE: '$n$',
+    SYSTEM_MOD_PLUS_1_FREE: '$n$',
+    SYSTEM_TWO_RESTRICTIONS: '$n, I, J, F$',
+    SYSTEM_TWO_RESTRICTIONS_MINUS_1: '$n, I, J, F$',
+    SYSTEM_TWO_RESTRICTIONS_MINUS_2: '$n, I, J, F$',
+    SYSTEM_TWO_RESTRICTIONS_MINUS_3: '$n, I, J, F$',
+}
 
 class BorsukLowerEstimate(object):
     def __init__(self, outer_estimate=None, outer_parameters=None):
@@ -56,14 +68,17 @@ class BorsukLowerEstimate(object):
         result = None
         if self.parameters is not None:
             if len(self.parameters) == 1: 
-                parameters_string = '({0})'.format(self.parameters[0])
+                parameters_string = str(self.parameters[0])
             else:
                 parameters_string = str(self.parameters)
-            result = '\t'.join([str(self.estimate), parameters_string])
+            result = [str(self.estimate), parameters_string]
         else:
-            result = str(self.estimate)
+            result = [str(self.estimate), '--']
         if self.is_max:
-            result = '\\textbf{' + result + '}'
+            result = map(lambda r: '\\textbf{' + r + '}', result)
+
+        result = ' & '.join(result)
+
         return result
 
     def is_from_spherical_enrichment(self):
@@ -133,7 +148,7 @@ def find_f_best_lower_estimate_fixed(n, prime_powers):
             for k_1 in range(1, d):
                 k_m1 = d - k_1
                 size = int(binom(n, k_0) * binom(n - k_0 - 1, k_m1))
-                f_estimate = int(ceil(float(size) / alpha_upper))
+                f_estimate = int(ceil(float128(size) / float128(alpha_upper)))
                 if best_answer.estimate <= f_estimate:
                     best_answer.update(f_estimate, (k_m1, k_0, k_1))
     
@@ -153,7 +168,8 @@ def find_f_best_lower_estimate_free(n, prime_powers):
         d = q 
         if d < n:
             size = int(binom(n, d) * (2 ** (d - 1))) 
-            f_estimate = int(ceil(float(size) / alpha_upper))
+            f_estimate = int(ceil(float128(size) / float128(alpha_upper)))
+
             if best_answer.estimate <= f_estimate:
                 best_answer.update(f_estimate, (n, d))
 
@@ -211,7 +227,7 @@ def find_f_two_digits_single_ban_custom_remainder(n, prime_powers):
             alpha_upper += binom(n - 2, m)
 
 
-    f_estimate = int(ceil(float(size) / alpha_upper))
+    f_estimate = int(ceil(float128(size) / float128(alpha_upper)))
 
     if best_answer.estimate <= f_estimate:
         best_answer.update(f_estimate, (n,))
@@ -309,7 +325,7 @@ def find_f_two_restrictions_common_remainder(n, prime_powers):
                     for k in range(q - K):
                         alpha_upper += binom(n - F, k)
 
-                    f_min = int(ceil(float(size) / alpha_upper))
+                    f_min = int(ceil(float128(size) / float128(alpha_upper)))
 
                     if f_min > dimension + 1:
                         yield system, dimension, BorsukLowerEstimate(f_min, (n, I, J, F))
@@ -401,6 +417,7 @@ def print_results_for_graph_system_set(
         lowest_dimension, 
         highest_dimension, 
         systems, 
+        SYSTEM_TO_PARAMETERS,
         result, 
         affected_dimensions,
         fout

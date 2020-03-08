@@ -38,16 +38,27 @@ def load_prime_powers(filename):
     return [int(line.strip('\n')) for line in open(filename)]
 
 
-def print_table(dim_from, dim_to, systems, result, good_dims, fout):
-    print('\\begin{longtable}{|c|' + 'c|c|' * len(systems) + '}', file=fout)
-    print('\\*\\nobreakhline', file=fout)
-    print('размерность $\\downarrow$ & ' + ' & '.join([' '] * len(systems)) + '\\*\\nobreakhline',  file=fout)
-    print('серия графов $\\rightarrow$ & ' + ' & '.join(systems) + '\\*\\nobreakhline',  file=fout)
+def print_table(dim_from, dim_to, systems, systems_to_params, result, good_dims, fout):
+    def format_system_header_part(s):
+        return ''.join(['\\multicolumn{2} {|c|} {', s, '}'])
+
+    print('\\begin{longtable}{|c|' + 'c|c|' * len(systems) * 2 + '}', file=fout)
+    print('\\caption{Таблица \\label{Table}} \\\\', file=fout)
+
+    print('\\hline', file=fout)
+    print('серия графов $\\rightarrow$ & ' + ' & '.join(map(format_system_header_part, systems)) + ' \\\\ \hline',  file=fout)
+
+    parameter_header_parts = []
+    for system in systems:
+        parameter_header_parts.extend(['$f$', systems_to_params[system]])
+
+    print('размерность $\\downarrow$ & ' + ' & '.join(parameter_header_parts) + ' \\\\ \hline',  file=fout)
+    print('\\endhead', file=fout)
 
     for dim in range(dim_from, dim_to + 1):
         results = map(lambda x : str(result[dim][x]), systems)
         if dim in good_dims:
-            print(dim, '& ' + '&  '.join(results) + '\\\\\hline',  file=fout) 
+            print(dim, ' & ' + ' & '.join(results) + ' \\\\ \hline',  file=fout)
 
     print('\\end{longtable}', file=fout)
 
