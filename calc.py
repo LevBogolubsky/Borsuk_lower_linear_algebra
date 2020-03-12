@@ -392,12 +392,12 @@ def print_results_for_graph_system_set(
                 dimension = calculate_dimension_two_digits_single_ban_custom_remainder(n)
                 result[dimension][SYSTEM_MOD_0_FREE] = find_f_two_digits_single_ban_custom_remainder(n, prime_powers)
                 affected_dimensions = try_update_affected_dimensions(result, dimension, SYSTEM_MOD_0_FREE, affected_dimensions)
-        elif remainder_modulo_four_group == 3:
+        elif remainder_modulo_four_group == 1:
             if SYSTEM_MOD_MINUS_1_FREE in systems:
                 dimension = calculate_dimension_two_digits_single_ban_custom_remainder(n)
                 result[dimension][SYSTEM_MOD_MINUS_1_FREE] = find_f_two_digits_single_ban_custom_remainder(n, prime_powers)
                 affected_dimensions = try_update_affected_dimensions(result, dimension, SYSTEM_MOD_MINUS_1_FREE, affected_dimensions)
-        elif remainder_modulo_four_group == 1:
+        elif remainder_modulo_four_group == 3:
             if SYSTEM_MOD_PLUS_1_FREE in systems:
                 dimension = calculate_dimension_two_digits_single_ban_custom_remainder(n)
                 result[dimension][SYSTEM_MOD_PLUS_1_FREE] = find_f_two_digits_single_ban_custom_remainder(n, prime_powers)
