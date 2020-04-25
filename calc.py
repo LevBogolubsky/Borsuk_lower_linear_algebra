@@ -137,13 +137,11 @@ def find_f_best_lower_estimate_fixed(n, prime_powers):
     best_answer = BorsukLowerEstimate()
     
     for q in prime_powers:
-        if q - 1 > n:
-            break
         if q % 2 == 0:
             continue
-        alpha_upper = calculate_alpha_upper_estimate(n, q, 3)
         d = q 
         if d < n:
+            alpha_upper = calculate_alpha_upper_estimate(n, q, 3)
             k_0 = n - d
             for k_1 in range(1, d):
                 k_m1 = d - k_1
@@ -160,13 +158,11 @@ def find_f_best_lower_estimate_free(n, prime_powers):
     best_answer = BorsukLowerEstimate()
     
     for q in prime_powers:
-        if q - 1 > n:
-            break
         if q % 2 == 0:
             continue
-        alpha_upper = calculate_alpha_upper_estimate(n, q, 3)
         d = q 
         if d < n:
+            alpha_upper = calculate_alpha_upper_estimate(n, q, 3)
             size = int(binom(n, d) * (2 ** (d - 1))) 
             f_estimate = int(ceil(float128(size) / float128(alpha_upper)))
 
