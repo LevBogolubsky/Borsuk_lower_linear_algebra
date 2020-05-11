@@ -336,6 +336,11 @@ def perform_spherical_enrichment(
         result, 
         affected_dimensions
 ):
+    """
+    Calculate additional estimates according to the lemma on the spherical enrichment.
+    The correctness of such an enrichment for every given graph parameter set must be
+    ensured manually now. TODO: automatize this?
+    """
     for dimension in range(lowest_dimension, highest_dimension + 1):
         max_value = 1
 
